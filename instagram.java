@@ -3,15 +3,15 @@ import com.google.gson.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class instagram {
 
+    //Здесь весь кипиш
     public static void main(String[] args) throws IOException{
+
         // Список в котором мы будем хранить все данные
-        List<Article> articleList = new ArrayList<>();
+        List<Post> articleList = new ArrayList<>();
 
         // Get-запрос к Instagram
         Scanner in = new Scanner(System.in);
@@ -39,71 +39,51 @@ public class instagram {
         // Проходимся по всему JSON и добавляем в созданный ранее список как объекты класса
         for (JsonElement user : jarray2){
             JsonObject userObject = user.getAsJsonObject();
-            String comment = "empty";
+            String description = "empty";
 
             try {
                 userObject.get("caption");
-                 comment = userObject.get("caption").toString();
+                 description = userObject.get("caption").toString();
             }catch (NullPointerException e){
-                 comment = "empty";
+                 description = "empty";
             }
 
             finally {
+                String sourse = null;
+                String pid = null;
+                userObject.get("code");
+                String links = userObject.get("code").toString();
+                String link = links.format("https://www.instagram.com/p/%s", links.substring(1, links.length() - 1));
+
+
+                int reposts = 0;
                 userObject.get("display_src");
-                String img_url = userObject.get("display_src").toString();
+                String imageUrl = userObject.get("display_src").toString();
 
                 userObject.get("likes");
-                String likes = userObject.get("likes").toString();
+                String like = userObject.get("likes").toString();
+                int start1 = like.indexOf("\"count\":");
+                int end1 = like.indexOf("}");
+                like = like.substring(start1 + "\"count\":".length(), end1);
+
+
+                int likes = Integer.parseInt(like);
 
                 userObject.get("date");
-                String date = userObject.get("date").toString();
+                String dates = userObject.get("date").toString();
+                int date1 = Integer.parseInt(dates);
 
-                articleList.add(new Article(img_url, comment, likes, date));
+                int year = date1 / 10000;
+                int month = (date1 % 10000) / 100;
+                int day = date1 % 100;
+                Date date = new GregorianCalendar(year, month, day).getTime();
+
+                articleList.add(new Post(sourse,  pid, date, description, link, imageUrl, likes, reposts));
             }
         }
 
         // Печатаем по одному элементы списка(то есть объекты класса)
         articleList.forEach(System.out::println);
-    }
-}
-
-// Класс, в котором мы храним информацию про посты
-class Article{
-    private String img_url;
-    private String comment;
-    private String likes;
-    private String date;
-
-    public Article(String img_url, String comment, String likes, String date) {
-        this.img_url = img_url;
-        this.comment = comment;
-        this.likes = likes;
-        this.date = date;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public String getImg_url() {
-        return img_url;
-    }
-
-    public String getLikes() {
-        return likes;
-    }
-
-    @Override
-    public String toString() {
-        return "Article{" +
-                "img_url='" + img_url + '\'' +
-                ", comment='" + comment + '\'' +
-                ", likes='" + likes + '\'' +
-                ", date='" + date + '\'' +
-                '}';
+//        System.out.print(articleList);
     }
 }
