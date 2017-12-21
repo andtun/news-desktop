@@ -5,9 +5,10 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.*;
 
-public class vk {
+public class vk implements Parser{
 
-    public static void main(String[] args) throws IOException {
+    @Override
+    public static void parse() throws IOException {
             // Список в котором мы будем хранить все данные
             List<Post> articleList = new ArrayList<>();
 

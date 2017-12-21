@@ -1,5 +1,11 @@
 import java.util.Date;
 
+interface Parser {
+    public static void parse() throws IOException {
+
+    }
+}
+
 public class Post {
     protected String sourse;
     protected String pid;
@@ -34,4 +40,5 @@ public class Post {
         this.reposts = reposts;
         this.sourse = sourse;
     }
+
 }

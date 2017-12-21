@@ -5,10 +5,11 @@ import org.jsoup.nodes.Document;
 import java.io.IOException;
 import java.util.*;
 
-public class instagram {
+public static class instagram implements Parser {
 
     //Здесь весь кипиш
-    public static void main(String[] args) throws IOException{
+    @Override
+    public static void parse() throws IOException{
 
         // Список в котором мы будем хранить все данные
         List<Post> articleList = new ArrayList<>();
@@ -85,5 +86,9 @@ public class instagram {
         // Печатаем по одному элементы списка(то есть объекты класса)
         articleList.forEach(System.out::println);
 //        System.out.print(articleList);
+    }
+
+    public static void main(String[] args) {
+        vk.parse();
     }
 }
